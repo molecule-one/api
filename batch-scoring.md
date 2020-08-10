@@ -75,7 +75,7 @@ We provide HTTP endpoints allowing you to:
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
-  _Warning: only already processed results will be removed. If you wish to remove all data related to your batch scoring request, you should wait for it to process before calling this endpoint._
+This will remove all data compound data and stop processing your batch scoring request.
 
 FAQ:
 
