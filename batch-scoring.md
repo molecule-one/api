@@ -4,7 +4,7 @@
 All API endpoints use JSON as data format for both incoming and outcoming data.
 We provide HTTP endpoints allowing you to:
 
-- Create batch scoring request:
+- **Create batch scoring request**:
   ```sh
   curl .../api/v1/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
@@ -30,7 +30,7 @@ We provide HTTP endpoints allowing you to:
     -d '{"targets": ["<SMILES_1>", "<SMILES_2>", ...], "params": {"exploratory_search": true}}'
   ```
 
-- Check batch scoring status:
+- **Check batch scoring status**:
   ```sh
   curl .../api/v1/batch-search/<ID> \
     -H "Content-Type: application/json" \
@@ -68,7 +68,7 @@ We provide HTTP endpoints allowing you to:
       ]
   ```    
 
-- Remove data
+- **Remove data**
 
   ```
   curl .../api/v1/batch-search/<ID> -X DELETE \
