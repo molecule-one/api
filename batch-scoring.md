@@ -44,7 +44,7 @@ We provide HTTP endpoints allowing you to:
   In response, you’ll get information about your batch scoring processing progress, i.e.:
   `{"queued":92,"running":4,"finished":104,"error":0}`
 
-  -  Get partial or complete results:
+-  **Get partial or complete results**:
   ```
   curl .../api/v1/batch-search-result/<ID> \
     -H "Content-Type: application/json" \
