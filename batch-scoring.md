@@ -22,7 +22,7 @@ We provide HTTP endpoints allowing you to:
 
   You can also configure your scoring request with additional parameters using the `params` object:
   - `exploratorySearch`: `boolean` (default: `false`) - our system will include reactions will fewer supporting information - it may provide better results at the cost of increased duration.
-  - `detailLevel`: `"score" | "synthesis"` (default: `"score"`) - if the specified level is `"synthesis"`, our system will include the best synthesis pathway that it found together in addition to other values.
+  - `detailLevel`: `"score" | "synthesis"` (default: `"score"`) - if the specified level is `"synthesis"`, our system will include the best synthesis pathway that it found in addition to other values.
 
   Example:
   ```sh
