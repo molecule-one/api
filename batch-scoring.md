@@ -157,7 +157,7 @@ This will remove all data compound data and stop processing your batch scoring r
 
 Return values description:
  - `targetSmiles` - Smiles specified by the user as an input in the batch request
- - `status` - TODO
+ - `status` - `"ok" | "running" | "error"` - status of a given search. Pending searches are currently not listed in the output.
  - `result` - Estimated synthetic complexity of the target compound, based on the best pathway that was found, mapped to range [1;10]. Value `-1` is used as an error code.
  - `price` - Estimated price (in USD) of starting materials needed for synthesis of fixed number of moles of the target compound. (*possible null value)
  - `certainty` - Aggregated certainty of all reactions found in the best synthesis pathway in range of [0;1]. (*possible null value)
