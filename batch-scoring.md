@@ -155,7 +155,7 @@ We provide HTTP endpoints allowing you to:
   ```
 This will remove all data compound data and stop processing your batch scoring request.
 
-Return values description:
+## Result format description:
  - `targetSmiles` - Smiles specified by the user as an input in the batch request
  - `status` - `"ok" | "running" | "error"` - status of a given search. Pending searches are currently not listed in the output.
  - `result` - Estimated synthetic complexity of the target compound, based on the best pathway that was found, mapped to range [1;10]. Value `-1` is used as an error code.
