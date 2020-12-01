@@ -161,7 +161,7 @@ This will remove all data compound data and stop processing your batch scoring r
  - `result` - Estimated synthetic complexity of the target compound, based on the best pathway that was found, mapped to range [1;10]. Value `-1` is used as an error code.
  - `price` - Estimated price (in USD) of starting materials needed for synthesis of fixed number of moles of the target compound. (*possible null value)
  - `certainty` - Aggregated certainty of all reactions found in the best synthesis pathway in range of [0;1]. (*possible null value)
- - `reactionsCount` - Number of reactions in the best synthesis pathway. (*possible null value)
+ - `reactionCount` - Number of reactions in the best synthesis pathway. (*possible null value)
  - `synthesis` - Structure containing the best synthetic pathway found by the system. (*possible null value)
  - `timedOut` - Informs whether the search exceeded maximal allowed duration. This should happen only in case of compounds that are much bigger or much more complex than regular medicinal chemistry targets. Subsequent searches for the same compound may yield different results because of the variability of the search duration. If synthesis was found before exceeding the maximal duration, it will be used to compute the values above.
 
