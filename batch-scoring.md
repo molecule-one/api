@@ -8,7 +8,7 @@ We provide HTTP endpoints allowing you to:
   ### Basic request
 
   ```sh
-  curl .../api/v1/batch-search -X POST \
+  curl .../api/v2/batch_search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...]}'
   ```
@@ -24,36 +24,92 @@ We provide HTTP endpoints allowing you to:
 
   ### Starting materials
 
-  You can also provide your starting materials using the `startingMaterials` array.
+  You can also provide your starting materials using the `starting_materials` array.
 
   Example:
   ```sh
-  curl .../api/v1/batch-search -X POST \
+  curl .../api/v2/batch_search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
-    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "startingMaterials": ["<MATERIAL_1>", "<MATERIAL_2>", ...]}'
+    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "starting_materials": ["<MATERIAL_1>", "<MATERIAL_2>", ...]}'
   ```
 
   Where:
   - `<TOKEN>` should be replaced with private API token you’ll get from us
   - `<TARGET_1>` etc should be your target chemical compounds in SMILES format
   - `<MATERIAL_1>` etc should be your starting material chemical compounds in SMILES format
+    
+  ### Output detail level
+  You can control detail level of system output by using `detail_level` parameter.
+
+  Possible values:
+  - `"score"` (default)
+  - `"synthesis"` - if the specified, our system will include the best synthesis pathway that it found in addition to other values.
+
+Example:
+  ```sh
+  curl .../api/v2/batch_search -X POST \
+    -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
+    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "detail_level": "synthesis"}'
+  ```
 
   ### Parameters
 
-  You can also configure your scoring request with additional parameters using the `params` object:
-  - `exploratorySearch`: `boolean` (default: `false`) - our system will include reactions will fewer supporting information - it may provide better results at the cost of increased duration.
+  You can also configure your scoring request with additional parameters using the `parameters` object:
+  - `model`: `"gat" | "megan"` (default: `gat`) - our system
+  - `time_limit`: `boolean` (default: `false`) - our system
+  - `length`: `"regular" | "short"` (default: `regular`) - our system
+  - `synthesis_scale`: `"kilogram" | "molar" | "millimolar" | "micromolar"` (default: `molar`) - our system
+  - `supplier_redundancy`: `boolean` (default: `true`) - our system
+  - `availability_tier`: `[1:5]` (default: `3`) - our system
   - `detailLevel`: `"score" | "synthesis"` (default: `"score"`) - if the specified level is `"synthesis"`, our system will include the best synthesis pathway that it found in addition to other values.
 
   Example:
   ```sh
-  curl .../api/v1/batch-search -X POST \
+  curl .../api/v2/batch_search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
-    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "params": {"exploratorySearch": true}}'
+    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "parameters": {"exploratorySearch": true}}'
   ```
 
+  ### Default parameters set
+In our web application you can create parameters set, that can be used in API request.
+Use parameter:
+- `preset`: unique name, specified in web application during parameter set creation.
+
+  Example:
+  ```sh
+  curl .../api/v2/batch_search -X POST \
+    -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
+    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "preset": "simple_params" }'
+  ```
+  
+## Check batch request details
+  ```sh
+  curl .../api/v2/batch_search/<ID> \
+    -H "Content-Type: application/json" \
+    -H "Authorization: ApiToken-v1 <TOKEN>"
+  ```
+
+Where:
+- `<TOKEN>` should be replaced with private API token
+- `<ID>` should be replace with batch scoring ID you got in previous step
+
+In response, you’ll get information about your batch request, i.e.: 
+```
+{
+  "id": "899db985-5957-4718-b45a-8770c6e2bb99",
+  "name": "899db985",
+  "size": 1,
+  "inputParams": {},
+  "startingMaterialsSize": 0,
+  "createdAt": "2021-08-01T04:00:04.223Z",
+  "source": "API_V2"
+}
+```
+
+  
 ## Check batch scoring status
   ```sh
-  curl .../api/v1/batch-search/<ID> \
+  curl .../api/v2/batch_search_status/<ID> \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -66,7 +122,7 @@ We provide HTTP endpoints allowing you to:
 
 ## Get partial or complete results
   ```sh
-  curl .../api/v1/batch-search-result/<ID> \
+  curl .../api/v2/batch_search_result/<ID> \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -91,7 +147,7 @@ We provide HTTP endpoints allowing you to:
   ]
   ```
 
-  If the search was run with the `detailLevel: "synthesis"` parameter, additional fields `synthesis` and `decomposition` will be returned:
+  If the search was run with the `detail_level: "synthesis"` parameter, additional fields `synthesis` and `decomposition` will be returned:
   ```js
   [
     {
@@ -176,7 +232,7 @@ We provide HTTP endpoints allowing you to:
   
   You can fetch a subset of all returned values by specifying them in query string:
   ```sh
-  curl .../api/v1/batch-search-result/<ID>?only=targetSmiles&only=result
+  curl .../api/v2/batch_search_result/<ID>?only=targetSmiles&only=result
   ```
   
   Returns:
@@ -192,7 +248,7 @@ We provide HTTP endpoints allowing you to:
   
   You can format the floating point scores returned by the system (`certainty`, `result`, `price`) to given number of significant digits using `precision` parameter: 
   ```sh
-  curl .../api/v1/batch-search-result/<ID>?precision=3
+  curl .../api/v2/batch_search_result/<ID>?precision=3
   ```
   
   Returns:
@@ -213,7 +269,7 @@ We provide HTTP endpoints allowing you to:
   
 ## Remove data
   ```sh
-  curl .../api/v1/batch-search/<ID> -X DELETE \
+  curl .../api/v2/batch_search/<ID> -X DELETE \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
