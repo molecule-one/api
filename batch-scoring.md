@@ -8,7 +8,7 @@ We provide HTTP endpoints allowing you to:
   ### Basic request
 
   ```sh
-  curl .../api/v2/batch_search -X POST \
+  curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...]}'
   ```
@@ -28,7 +28,7 @@ We provide HTTP endpoints allowing you to:
 
   Example:
   ```sh
-  curl .../api/v2/batch_search -X POST \
+  curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "starting_materials": ["<MATERIAL_1>", "<MATERIAL_2>", ...]}'
   ```
@@ -42,12 +42,12 @@ We provide HTTP endpoints allowing you to:
   You can control detail level of system output by using `detail_level` parameter.
 
   Possible values:
-  - `"score"` (default)
+  - `"score"` (default) - return score and other properties of the best synthetic pathway found: certainty, price of starting materials and number of steps.
   - `"synthesis"` - if the specified, our system will include the best synthesis pathway that it found in addition to other values.
 
 Example:
   ```sh
-  curl .../api/v2/batch_search -X POST \
+  curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "detail_level": "synthesis"}'
   ```
@@ -55,17 +55,21 @@ Example:
   ### Parameters
 
   You can also configure your scoring request with additional parameters using the `parameters` object:
-  - `model`: `"gat" | "megan"` (default: `gat`) - our system
-  - `time_limit`: `boolean` (default: `false`) - our system
-  - `length`: `"regular" | "short"` (default: `regular`) - our system
-  - `synthesis_scale`: `"kilogram" | "molar" | "millimolar" | "micromolar"` (default: `molar`) - our system
-  - `supplier_redundancy`: `boolean` (default: `true`) - our system
-  - `availability_tier`: `[1:5]` (default: `3`) - our system
-  - `detailLevel`: `"score" | "synthesis"` (default: `"score"`) - if the specified level is `"synthesis"`, our system will include the best synthesis pathway that it found in addition to other values.
+  - `model`: `"gat" | "megan"` (default: `gat`) - Machine Learning model, each one can give different results
+  - `time_limit`: `boolean` (default: `false`) - break search, that take to long time
+  - `length`: `"regular" | "short"` (default: `regular`) - Defines how long the search is running, and for how many different intermediate compounds the system proposes reactions leading to them. "short" search is sufficient for compounds where you expect the synthetic pathway to be not longer than 5 steps.
+  - `synthesis_scale`: `"kilogram" | "molar" | "millimolar" | "micromolar"` (default: `molar`) - the amount of compound that the system optimizes the synthesis for. Higher scale will result in longer synthetic pathway, starting at cheaper starting materials.
+  - `supplier_redundancy`: `boolean` (default: `true`) - describes whether system require the starting materials to be available at at least three different vendors.
+  - `availability_tier`: `[1:5]` (default: `3`) - values meaning:
+    - 1 - All starting materials ship in 1-5 business days.
+    - 2 - All starting materials ship in 2-10 business days.
+    - 3 - All starting materials ship within 4 weeks.
+    - 4 - Starting materials may require synthesis and are usually shipped within 12 weeks.
+    - 5 - Starting materials require custom quote (POA).
 
   Example:
   ```sh
-  curl .../api/v2/batch_search -X POST \
+  curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "parameters": {"exploratorySearch": true}}'
   ```
@@ -77,14 +81,14 @@ Use parameter:
 
   Example:
   ```sh
-  curl .../api/v2/batch_search -X POST \
+  curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
     -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "preset": "simple_params" }'
   ```
   
 ## Check batch request details
   ```sh
-  curl .../api/v2/batch_search/<ID> \
+  curl .../api/v2/batch-search/<ID> \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -109,7 +113,7 @@ In response, you’ll get information about your batch request, i.e.:
   
 ## Check batch scoring status
   ```sh
-  curl .../api/v2/batch_search_status/<ID> \
+  curl .../api/v2/batch-search-status/<ID> \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -122,7 +126,7 @@ In response, you’ll get information about your batch request, i.e.:
 
 ## Get partial or complete results
   ```sh
-  curl .../api/v2/batch_search_result/<ID> \
+  curl .../api/v2/batch-search-result/<ID> \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -232,7 +236,7 @@ In response, you’ll get information about your batch request, i.e.:
   
   You can fetch a subset of all returned values by specifying them in query string:
   ```sh
-  curl .../api/v2/batch_search_result/<ID>?only=targetSmiles&only=result
+  curl .../api/v2/batch-search_result/<ID>?only=targetSmiles&only=result
   ```
   
   Returns:
@@ -245,31 +249,10 @@ In response, you’ll get information about your batch request, i.e.:
     ...
   ]
   ```    
-  
-  You can format the floating point scores returned by the system (`certainty`, `result`, `price`) to given number of significant digits using `precision` parameter: 
-  ```sh
-  curl .../api/v2/batch_search_result/<ID>?precision=3
-  ```
-  
-  Returns:
-  ```js
-  [
-    {
-      "targetSmiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",
-      "status": "ok",
-      "result": "7.53",
-      "certainty": "0.581",
-      "price": "5230",
-      "reactionCount": 5,
-      "timedOut": false
-    },
-    ...
-  ]
-  ```
-  
+
 ## Remove data
   ```sh
-  curl .../api/v2/batch_search/<ID> -X DELETE \
+  curl .../api/v2/batch-search/<ID> -X DELETE \
     -H "Content-Type: application/json" \
     -H "Authorization: ApiToken-v1 <TOKEN>"
   ```
@@ -278,7 +261,11 @@ In response, you’ll get information about your batch request, i.e.:
 ## Result format description
   - `targetSmiles` - Smiles specified by the user as an input in the batch request
   - `status` - `"ok" | "running" | "error"` - status of a given search. Pending searches are currently not listed in the output.
-  - `result` - Estimated synthetic complexity of the target compound, based on the best pathway that was found, mapped to range [1;10]. Value `-1` is used as an error code.
+  - `result` - Estimated synthetic complexity of the target compound is a value between 1 and 10 that describes how hard it is to synthesize a given compound - the higher, the harder the synthesis is. Number of reactions in a pathway is the most important factor.
+    - 1-2 - The compound is commercially available and is relatively cheap.
+    - 2-4 - There is a short and straightforward synthesis found for this compound.
+    - 4-6 - A relatively long pathway, pathway with some uncertain reactions or with expensive starting materials was found.
+    - 6-10 - A long pathway with a lot of unlikely reactions was found or there is no synthesis found at all.
   - `price` - Estimated price (in USD) of starting materials needed for synthesis of fixed number of moles of the target compound. (*possible null value)
   - `certainty` - Aggregated certainty of all reactions found in the best synthesis pathway in range of [0;1]. (*possible null value)
   - `reactionCount` - Number of reactions in the best synthesis pathway. (*possible null value)
