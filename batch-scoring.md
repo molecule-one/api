@@ -71,7 +71,7 @@ Example:
   ```sh
   curl .../api/v2/batch-search -X POST \
     -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
-    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "parameters": {"exploratorySearch": true}}'
+    -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "parameters": {"model": "megan"}}'
   ```
 
   ### Default parameters set
@@ -103,9 +103,9 @@ In response, you’ll get information about your batch request, i.e.:
   "id": "899db985-5957-4718-b45a-8770c6e2bb99",
   "name": "899db985",
   "size": 1,
-  "inputParams": {},
-  "startingMaterialsSize": 0,
-  "createdAt": "2021-08-01T04:00:04.223Z",
+  "input_params": {},
+  "starting_materials_size": 0,
+  "created_at": "2021-08-01T04:00:04.223Z",
   "source": "API_V2"
 }
 ```
@@ -139,13 +139,13 @@ In response, you’ll get information about your batch request, i.e.:
   ```js
   [
     {
-      "targetSmiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",
+      "target_smiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",
       "status": "ok",
       "result": 7.53411,
       "certainty": 0.58163,
       "price": 5232.5,
-      "reactionCount": 5,
-      "timedOut": false
+      "reaction_count": 5,
+      "timed_out": false
     },
     ...
   ]
@@ -155,17 +155,17 @@ In response, you’ll get information about your batch request, i.e.:
   ```js
   [
     {
-      "targetSmiles": "<TARGET_SMILES>",
+      "target_smiles": "<TARGET_SMILES>",
       ...,
       "synthesis": {
-        "targetId": "<TARGET_ID>",
+        "target_id": "<TARGET_ID>",
         "compounds": {
           "<CMPD_ID>": {
             "id": "<CMPD_ID>",
             "type": "compound",
             "smiles": "<CMPD_SMI>",
-            "productOf": "<RXN1_ID>" | null,
-            "substrateOf": "<RXN2_ID>" | null
+            "product_of": "<RXN1_ID>" | null,
+            "substrate_of": "<RXN2_ID>" | null
           },
           ...
         },
@@ -174,8 +174,8 @@ In response, you’ll get information about your batch request, i.e.:
             "id": "<RXN_ID>",
             "type": "reaction",
             "smiles": "<SUBS1_SMI>.<SUBS2_SMI>>><PROD_SMI>", // mapped reaction smiles
-            "productId": "<PROD_ID>",
-            "substratesIds": [
+            "product_id": "<PROD_ID>",
+            "substrates_ids": [
               "<SUBS1_ID>",
               "<SUBS2_ID>"
             ],
@@ -191,11 +191,11 @@ In response, you’ll get information about your batch request, i.e.:
           "<ATOM4_ID>",
           ...
         ],
-        "atomsNotPurchased": [
+        "atoms_not_purchased": [
           "<ATOM1_ID>",
           ...
         ],
-        "atomsPurchased": [
+        "atoms_purchased": [
           "<ATOM2_ID>",
           ...
         ],
@@ -210,21 +210,21 @@ In response, you’ll get information about your batch request, i.e.:
           ],
           ...
         ],
-        "bondsBroken": [
+        "bonds_broken": [
           [
             "<ATOM1_ID>",
             "<ATOM2_ID>"
           ],
           ...
         ],
-        "bondsNotBroken": [
+        "bonds_not_broken": [
           [
             "<ATOM3_ID>",
             "<ATOM4_ID>"
           ],
           ...
         ],
-        "mappedSmiles": "<MAPPED_TARGET_SMILES>"
+        "mapped_smiles": "<MAPPED_TARGET_SMILES>"
       }
     },
     ...
@@ -236,14 +236,14 @@ In response, you’ll get information about your batch request, i.e.:
   
   You can fetch a subset of all returned values by specifying them in query string:
   ```sh
-  curl .../api/v2/batch-search_result/<ID>?only=targetSmiles&only=result
+  curl .../api/v2/batch-search-result/<ID>?only=target_smiles&only=result
   ```
   
   Returns:
   ```js
   [
     {
-      "targetSmiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",
+      "target_smiles": "Cc1ccc(cc1Nc2nccc(n2)c3cccnc3)NC(=O)c4ccc(cc4)CN5CCN(CC5)C",
       "result": 7.53411
     },
     ...
@@ -259,7 +259,7 @@ In response, you’ll get information about your batch request, i.e.:
   This will remove all compound data (targets, starting materials, results) and stop processing your batch scoring request.
 
 ## Result format description
-  - `targetSmiles` - Smiles specified by the user as an input in the batch request
+  - `target_smiles` - Smiles specified by the user as an input in the batch request
   - `status` - `"ok" | "running" | "error"` - status of a given search. Pending searches are currently not listed in the output.
   - `result` - Estimated synthetic complexity of the target compound is a value between 1 and 10 that describes how hard it is to synthesize a given compound - the higher, the harder the synthesis is. Number of reactions in a pathway is the most important factor.
     - 1-2 - The compound is commercially available and is relatively cheap.
@@ -268,10 +268,11 @@ In response, you’ll get information about your batch request, i.e.:
     - 6-10 - A long pathway with a lot of unlikely reactions was found or there is no synthesis found at all.
   - `price` - Estimated price (in USD) of starting materials needed for synthesis of fixed number of moles of the target compound. (*possible null value)
   - `certainty` - Aggregated certainty of all reactions found in the best synthesis pathway in range of [0;1]. (*possible null value)
-  - `reactionCount` - Number of reactions in the best synthesis pathway. (*possible null value)
+  - `reaction_count` - Number of reactions in the best synthesis pathway. (*possible null value)
   - `synthesis` - Structure containing the best synthetic pathway found by the system. (*possible null value)
   - `decomposition` - Structure containing information about how the reactions generated by our system can be used to decompose the target compound into commercially available starting materials.
-  - `timedOut` - Informs whether the search exceeded maximal allowed duration. This should happen only in case of compounds that are much bigger or much more complex than regular medicinal chemistry targets. Subsequent searches for the same compound may yield different results because of the variability of the search duration. If synthesis was found before exceeding the maximal duration, it will be used to compute the values above.
+  - `timed_out` - Informs whether the search exceeded maximal allowed duration. This should happen only in case of compounds that are much bigger or much more complex than regular medicinal chemistry targets. Subsequent searches for the same compound may yield different results because of the variability of the search duration. If synthesis was found before exceeding the maximal duration, it will be used to compute the values above.
+  - `url` - Url address to our system, where search result is present in human-readable way. 
 
 *possible null value - this field may be `null` if we weren't able to find any feasible pathway
 
