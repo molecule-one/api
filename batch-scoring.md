@@ -275,7 +275,3 @@ In response, you’ll get information about your batch request, i.e.:
   - `url` - Url address to our system, where search result is present in human-readable way. 
 
 *possible null value - this field may be `null` if we weren't able to find any feasible pathway
-
-## FAQ
-  - Q: Why do I get different results using batch scoring request and molecule.one's webapp for the same target?
-  - A: Request with exploratorySearch turned on runs the same search as the one accessible via the web interface. By default it's disabled - it runs search with smaller computational budget, so for some compounds the batch score may not find the pathways found via the web interface.
