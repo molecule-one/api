@@ -1,4 +1,4 @@
-# Molecule.one Batch Scoring API
+# Molecule.one Batch Scoring API v2
 
 All API endpoints use JSON as data format for both incoming and outcoming data.
 We provide HTTP endpoints allowing you to:
@@ -49,7 +49,7 @@ Where:
 
 ### Output detail level
 
-You can control detail level of system output by using `detail_level` parameter.
+You can control detail level of system output by using `detail_level` attribute.
 
 Possible values:
 
@@ -62,6 +62,18 @@ Example:
 curl .../api/v2/batch-search -X POST \
   -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
   -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "detail_level": "synthesis"}'
+```
+
+### Job priority
+
+In order to prioritize some jobs over other ones add `priority` attribute with an integer value ranging from `1` to `10` where `10` means the **highest** priority. Default `priority` value is `5`.
+
+Example:
+
+```sh
+curl .../api/v2/batch-search -X POST \
+  -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
+  -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...], "priority": 7}'
 ```
 
 ### Parameters
@@ -187,7 +199,7 @@ In response, you’ll get batch scoring results, e.g.:
 ]
 ```
 
-If the search was run with the `detail_level: "synthesis"` parameter, additional fields `synthesis` and `decomposition` will be returned:
+If the search was run with the `detail_level: "synthesis"` attribute, additional fields `synthesis` and `decomposition` will be returned:
 
 ```js
 [
