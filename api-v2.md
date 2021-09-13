@@ -108,7 +108,7 @@ curl .../api/v2/batch-search -X POST \
 
 ### Parameter sets
 
-You can apply the parameter sets created in our web application by setting the `preset` parameter to the unique name specified during parameter set creation.
+You can apply the parameter sets created in our web application by setting the `preset` attribute to the unique name specified during parameter set creation.
 
 Example:
 
