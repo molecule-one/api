@@ -8,7 +8,7 @@ We provide HTTP endpoints allowing you to:
 ### Basic request
 
 ```sh
-curl .../api/v2/batch-search -X POST \
+curl <DOMAIN>/api/v2/batch-search -X POST \
   -H "Content-Type: application/json" -H "Authorization: ApiToken-v1 <TOKEN>"  \
   -d '{"targets": ["<TARGET_1>", "<TARGET_2>", ...]}'
 ```
