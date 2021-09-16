@@ -15,6 +15,7 @@ curl <DOMAIN>/api/v2/batch-search -X POST \
 
 Where:
 
+- `<DOMAIN>` is a host address of the instance that you use, e.g. app.molecule.one
 - `<TOKEN>` should be replaced with the private API token you’ll get from us
 - `<TARGET_1>` etc should be your target chemical compounds in SMILES format
 
