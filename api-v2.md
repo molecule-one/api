@@ -98,7 +98,7 @@ You can also configure your scoring request with additional parameters using the
   - 3 - All starting materials ship within 4 weeks.
   - 4 - Starting materials may require synthesis and are usually shipped within 12 weeks.
   - 5 - Starting materials require custom quote (POA).
-- `name`: `string` (dafault: part of id) Name of batch search
+- `name`: `string` (default: part of id) Name of batch search
 
 Example:
 
