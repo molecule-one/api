@@ -94,7 +94,7 @@ curl .../api/v2/batch-search -X POST \
 
 You can also configure your scoring request with additional parameters using the `parameters` object:
 
-- `model`: `"gat" | "megan"` (default: `"gat"`)
+- `model`: `"gat" | "megan" | "transformer"` (default: `"gat"`)
   Machine Learning model, each one can give different results.
 - `time_limit`: `boolean` (default: `false`)
   Break the searches that take too long to complete.
